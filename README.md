@@ -3,22 +3,23 @@
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
-Things you may want to cover:
+Things you need to download:
 
-* Ruby version
+* docker
 
-* System dependencies
+To Run the Project
 
-* Configuration
+* docker-compose up
+* navigate to http://localhost:8000/api-docs/index.html for swagger docs
+* navigate to http://localhost:1080/ for mailcatcher so you test emails
 
-* Database creation
+To Run tests
 
-* Database initialization
+* docker exec -it container_name rspec
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Bonus points covered:
+* Api authentication
+* Unit and integration tests
+* Analytics
+* Allow only 20 requests per hour
+* add docker so you can test all features easily
