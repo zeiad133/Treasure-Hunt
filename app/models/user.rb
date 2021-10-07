@@ -14,6 +14,7 @@ class User < ActiveRecord::Base # :confirmable, :lockable, :timeoutable and :omn
   include DeviseTokenAuth::Concerns::User
   validates_presence_of :email
   validates_uniqueness_of :email, case_sensitive: true
+  has_many :requests
 
 
 

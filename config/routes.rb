@@ -23,7 +23,7 @@ Rails.application.routes.draw do
     namespace :users do
       # users/endpoints
 
-
+      resources :analytics, only: %i(index)
       resources :treasures, only: %i() do
         collection { post :hunt }
       end

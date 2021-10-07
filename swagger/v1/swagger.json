@@ -35,6 +35,53 @@
     }
   },
   "paths": {
+    "/v1/users/analytics": {
+      "get": {
+        "summary": "Index",
+        "tags": [
+          "Analytics"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "start_time",
+            "in": "query",
+            "type": "date"
+          },
+          {
+            "name": "end_time",
+            "in": "query",
+            "type": "date"
+          },
+          {
+            "name": "radius",
+            "in": "query",
+            "type": "date",
+            "description": "All requests withing radius range in Kms"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Requests fetched"
+          },
+          "401": {
+            "description": "not authorized"
+          }
+        }
+      }
+    },
     "/v1/users/treasures/hunt": {
       "post": {
         "summary": "Hunt",

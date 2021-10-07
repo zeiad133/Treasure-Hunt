@@ -5,15 +5,29 @@ class Hunt
   delegate :current_location, :user, :treasure, :fail!, to: :context
 
   def call
-    fail!(errors: "You have already found the treasure") if user.treasure_found?
-
-    validate_location
+    validate
+    add_request
     context.distance = (treasure.distance_from(current_location) * 1000).to_i
     treasure_found if context.distance <= 5
 
   end
 
   private
+
+  def validate
+    validate_user
+    validate_location
+  end
+
+  def validate_user
+    fail!(errors: "You have already found the treasure") if user.treasure_found?
+    fail!(errors: "You have reached the max number this hour") if user.requests.this_hour.count >= 20
+
+  end
+
+  def add_request
+    user.requests << Request.create(lat:  current_location.first, lng: current_location.last)
+  end
 
   def treasure_found
     context.message = "Congratulations An email will be sent to you with the treasure details"
