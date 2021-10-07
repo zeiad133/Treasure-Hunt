@@ -1,0 +1,49 @@
+version: "3"
+services:
+  db:
+    image: mysql:5.7.24
+    volumes:
+      - db-data:/var/lib/mysql
+    env_file: docker/development/.env
+  redis:
+    image: redis:5.0.1
+  sidekiq:
+    depends_on:
+      - db
+      - redis
+    build:
+      context: .
+      dockerfile: docker/development/Dockerfile
+    env_file: docker/development/.env
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    environment:
+      - UID
+      - GID
+    volumes:
+      - .:/app
+  app:
+    build:
+      context: .
+      dockerfile: docker/development/Dockerfile
+    volumes:
+      - .:/app
+    env_file: docker/development/.env
+    entrypoint: docker/entrypoint.sh
+    environment:
+      - UID
+      - GID
+    ports:
+      - 8000:8000
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db
+      - redis
+  mailcatcher:
+    restart: on-failure:10
+    image: yappabe/mailcatcher
+    ports:
+    - "1080:1080"
+    - "1025:1025"
+volumes:
+  db-data:

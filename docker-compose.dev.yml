@@ -1,0 +1,29 @@
+version: "3"
+services:
+  sidekiq:
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    env_file: docker/dev/.env
+    command: sidekiq -C config/sidekiq.yml -L log/sidekiq.log
+    volumes:
+      - ./log:/app/log
+      - ./tmp:/app/tmp
+      - ./public:/app/public
+  app:
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - ./public:/app/public
+      - ./log:/app/log
+    env_file: docker/dev/.env
+    entrypoint: docker/entrypoint.sh
+    ports:
+      - 8000
+networks:
+  default:
+    external:
+      name: front

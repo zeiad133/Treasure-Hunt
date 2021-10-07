@@ -1,0 +1,72 @@
+
+version: '3'
+services:
+  db:
+    container_name: db
+    restart: always
+    image: mysql:5.7.24
+    volumes:
+      - db-data:/var/lib/mysql
+    env_file: docker/production/.env
+    networks:
+      - default
+  redis:
+    container_name: redis
+    restart: always
+    image: redis:5.0.1
+    networks:
+      - default
+  sidekiq:
+    restart: always
+    depends_on:
+      - 'db'
+      - 'redis'
+    build:
+      context: .
+      dockerfile: docker/production/Dockerfile
+    env_file: docker/production/.env
+    command: sidekiq -C config/sidekiq.yml -L log/sidekiq.log
+    volumes:
+      - ./log:/app/log
+    networks:
+      - default
+  app:
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/production/Dockerfile
+    volumes:
+      - ./public:/app/public
+      - ./log:/app/log
+    env_file: docker/production/.env
+    entrypoint: docker/entrypoint.sh
+    expose:
+      - 3000
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+      - redis
+    networks:
+      - front
+      - default
+  nginx-proxy:
+    container_name: nginx
+    restart: always
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ~/apps/vhosts:/etc/nginx/vhost.d:ro
+      - ./public:/usr/share/nginx/html
+    networks:
+      - front
+volumes:
+  db-data:
+
+networks:
+  front:
+    external: true
+  default:
+    driver: bridge

@@ -1,0 +1,159 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "TreasureHunt V1",
+    "version": "v1"
+  },
+  "security": [
+    {
+      "client": [
+
+      ],
+      "token": [
+
+      ],
+      "uid": [
+
+      ]
+    }
+  ],
+  "securityDefinitions": {
+    "client": {
+      "type": "apiKey",
+      "name": "client",
+      "in": "header"
+    },
+    "token": {
+      "type": "apiKey",
+      "name": "token",
+      "in": "header"
+    },
+    "uid": {
+      "type": "apiKey",
+      "name": "uid",
+      "in": "header"
+    }
+  },
+  "paths": {
+    "/v1/users/treasures/hunt": {
+      "post": {
+        "summary": "Hunt",
+        "tags": [
+          "Treasure"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "treasure",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "current_location": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Request submitted"
+          },
+          "422": {
+            "description": "invalid params"
+          },
+          "401": {
+            "description": "not authorized"
+          }
+        }
+      }
+    },
+    "/v1/users": {
+      "post": {
+        "summary": "Creates User",
+        "tags": [
+          "Users"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                },
+                "password_confirmation": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "email",
+                "password",
+                "password_confirmation"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "User created"
+          },
+          "422": {
+            "description": "invalid request"
+          }
+        }
+      }
+    },
+    "/v1/users/sign_in": {
+      "post": {
+        "summary": "Authenticate a User",
+        "tags": [
+          "Users"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "email",
+                "password"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": " wrong username or password"
+          }
+        }
+      }
+    }
+  }
+}
