@@ -9,6 +9,7 @@ Things you need to download:
 
 To Run the Project
 
+* remove .copy from .env.copy to add the .env file
 * docker-compose up
 * navigate to http://localhost:8000/api-docs/index.html for swagger docs
 * navigate to http://localhost:1080/ for mailcatcher so you test emails
